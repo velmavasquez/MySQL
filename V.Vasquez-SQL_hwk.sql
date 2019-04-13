@@ -27,6 +27,8 @@ so create a column in the table `actor` named `description` and use the data typ
 `BLOB` (Make sure to research the type `BLOB`, as the difference between it and `VARCHAR` are significant).*/
 Alter table actor Add description BLOB;
 
+select * from actor 
+
 /*3b. Very quickly you realize that entering descriptions for each actor is too much effort. 
 Delete the `description` column.*/
 Alter table actor drop description;
@@ -41,20 +43,26 @@ are shared by at least two actors*/
 select last_name, count(actor_id) as 'Number of actors with last name'
 from actor 
 group by last_name
-having count(actor_id) <=2; 
+having count(actor_id) >=2; 
 
 /* 4c. The actor `HARPO WILLIAMS` was accidentally entered in the `actor` table as `GROUCHO WILLIAMS`.
  Write a query to fix the record.*/
+
  update actor 
  set first_name = 'HARPO' 
  where first_name = 'GROUCHO';
+select * from actor
+where first_name = "HARPO" and last_name = "WILLIAMS";
 
 /*4d. Perhaps we were too hasty in changing `GROUCHO` to `HARPO`. It turns out that `GROUCHO` was the correct
  name after all! In a single query, if the first name of the actor is currently `HARPO`, change it to `GROUCHO`*/
+ set sql_safe_updates = 0;
  update actor 
  set first_name = 'GROUCHO' 
  where first_name = 'HARPO';
-
+set sql_safe_updates = 1;
+select * from actor
+where first_name = "GROUCHO" and last_name = "WILLIAMS";
 /*5a. You cannot locate the schema of the `address` table. Which query would you use to re-create it?
 Hint: [https://dev.mysql.com/doc/refman/5.7/en/show-create-table.html]
 (https://dev.mysql.com/doc/refman/5.7/en/show-create-table.html)*/
